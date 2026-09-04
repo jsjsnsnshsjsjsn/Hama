@@ -415,10 +415,12 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         view.preferredFramesPerSecond = settings.fpsMode.targetFPS(deviceMax: settings.deviceMaxFPS)
         view.antialiasingMode = settings.quality.antialiasing
         view.backgroundColor = .black
-        scene.rootNode.childNodes(passingTest: { _, _ in true })
+        let shadowLight = scene.rootNode
+            .childNodes(passingTest: { _, _ in true })
             .compactMap { $0.light }
             .first { $0.castsShadow }
-            ?.shadowMapSize = CGSize(width: settings.quality.shadowMap, height: settings.quality.shadowMap)
+        shadowLight?.shadowMapSize = CGSize(width: settings.quality.shadowMap,
+                                            height: settings.quality.shadowMap)
         view.allowsCameraControl = false
     }
 
