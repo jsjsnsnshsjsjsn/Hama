@@ -395,14 +395,15 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         }
     }
 
-    private func farSpawn(from pos: SCNVector3) -> SCNVector3 {
+    private func farSpawn(from pos: SCNVector3) -> SIMD3<Float> {
+        let px = Float(pos.x), pz = Float(pos.z)
         var best = arena.spawns[0]
         var bestD: Float = -1
         for s in arena.spawns {
-            let d = (s.x - pos.x) * (s.x - pos.x) + (s.z - pos.z) * (s.z - pos.z)
+            let d = (s.x - px) * (s.x - px) + (s.z - pz) * (s.z - pz)
             if d > bestD { bestD = d; best = s }
         }
-        return SCNVector3(best.x, 0, best.z)
+        return SIMD3<Float>(best.x, 0, best.z)
     }
 
     private func botIndex(forId id: String) -> Int? {
@@ -695,7 +696,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         let hits = scene.rootNode.hitTestWithSegment(
             from: SCNVector3(origin.x, origin.y, origin.z),
             to: SCNVector3(far.x, far.y, far.z),
-            options: [.searchMode: SCNHitTestSearchMode.all.rawValue, .categoryBitMask: 4 | 8 | 16 | 32]
+            options: [SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.all.rawValue,
+                      SCNHitTestOption.categoryBitMask.rawValue: 4 | 8 | 16 | 32]
         )
 
         guard let first = hits.first else {
@@ -858,7 +860,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         let hits = scene.rootNode.hitTestWithSegment(
             from: SCNVector3(muzzle.x, muzzle.y, muzzle.z),
             to: SCNVector3(far.x, far.y, far.z),
-            options: [.searchMode: SCNHitTestSearchMode.all.rawValue, .categoryBitMask: 2 | 16 | 32]
+            options: [SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.all.rawValue,
+                      SCNHitTestOption.categoryBitMask.rawValue: 2 | 16 | 32]
         )
         if let first = hits.first {
             let hitPos = SIMD3(first.worldCoordinates.x, first.worldCoordinates.y, first.worldCoordinates.z)
@@ -907,15 +910,15 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
             let targetWorld = cameraHolder.convertPosition(SCNVector3(0, 1.2, 0), to: scene.rootNode)
             let hits = scene.rootNode.hitTestWithSegment(
                 from: targetWorld, to: camWorld,
-                options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue,
-                          SCNHitTestOption.categoryBitMask: 16]
+                options: [SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.all.rawValue,
+                          SCNHitTestOption.categoryBitMask.rawValue: 16]
             )
             if let first = hits.first {
-                let p = first.worldCoordinates
-                let dx = Float(p.x - targetWorld.x)
-                let dy = Float(p.y - targetWorld.y)
-                let dz = Float(p.z - targetWorld.z)
-                let hitDist = (dx * dx + dy * dy + dz * dz).squareRoot()
+                let hp = first.worldCoordinates
+                let dx = Float(hp.x) - Float(targetWorld.x)
+                let dy = Float(hp.y) - Float(targetWorld.y)
+                let dz = Float(hp.z) - Float(targetWorld.z)
+                let hitDist: Float = (dx * dx + dy * dy + dz * dz).squareRoot()
                 cameraNode.position = SCNVector3(0, 1.35, max(0.6, hitDist - 0.25))
             } else {
                 cameraNode.position = desired
