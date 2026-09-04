@@ -9,7 +9,7 @@ struct GameView: View {
 
     @StateObject private var engine: GameEngine
     @Environment(\.dismiss) private var dismiss
-    @State private var lastAim: CGPoint = .zero
+    @State private var lastAim: CGSize = .zero
 
     init(settings: GameSettings, netSession: NetSession?, netCfg: NetMatchConfig?) {
         self.settings = settings
@@ -29,8 +29,8 @@ struct GameView: View {
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
-                            let dx = Float(value.translation.width - lastAim.x)
-                            let dy = Float(value.translation.height - lastAim.y)
+                            let dx = Float(value.translation.width - lastAim.width)
+                            let dy = Float(value.translation.height - lastAim.height)
                             lastAim = value.translation
                             engine.input.addAim(dx: dx, dy: dy)
                         }

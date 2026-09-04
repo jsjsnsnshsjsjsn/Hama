@@ -118,7 +118,7 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
     private let netCfg: NetMatchConfig?
 
     // جیهان
-    private var arena = ArenaData(halfSize: 30)
+    private(set) var arena = ArenaData(halfSize: 30)
     private let cameraNode = SCNNode()
     private let cameraHolder = SCNNode()
     private var viewmodelGun: SCNNode?
@@ -244,8 +244,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         scene.rootNode.addChildNode(sun)
 
         scene.fogColor = UIColor(red: 0.05, green: 0.07, blue: 0.13, alpha: 1)
-        scene.fogStartDistance = meters * 0.7
-        scene.fogEndDistance = meters * 2.2
+        scene.fogStartDistance = CGFloat(meters) * 0.7
+        scene.fogEndDistance = CGFloat(meters) * 2.2
         scene.fogDensityExponent = 1.0
     }
 
@@ -381,8 +381,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
 
     // MARK: - Spawning
 
-    private func spawn(_ e: Entity, at pos: SCNVector3) {
-        e.root.position = pos
+    private func spawn(_ e: Entity, at pos: SIMD3<Float>) {
+        e.root.position = SCNVector3(pos.x, pos.y, pos.z)
         e.root.isHidden = false
         e.hp = 100
         e.alive = true
@@ -604,7 +604,9 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
               let legR = e.root.childNode(withName: "\(e.id)_legR", recursively: false),
               let armL = e.root.childNode(withName: "\(e.id)_armL", recursively: false),
               let armR = e.root.childNode(withName: "\(e.id)_armR", recursively: false) else { return }
-        let swing = sin(e.walkPhase) * min(speed / 3, 1) * 0.75
+        let phase = Float(sin(e.walkPhase))
+        let amp = min(speed / 3.0, 1.0)
+        let swing: Float = phase * amp * 0.75
         legL.eulerAngles.x = swing
         legR.eulerAngles.x = -swing
         armL.eulerAngles.x = -swing * 0.6
@@ -626,8 +628,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
 
         // ریکۆیل
         let recoilScale: Float = scoped ? 0.75 : 1.5
-        pitch += Float.random(in: 0...1) * spec.verticalRecoil * recoilScale
-        let horiz = Float.random(in: -1...1) * spec.horizontalRecoil * recoilScale
+        pitch += Float.random(in: 0...1) * Float(spec.verticalRecoil) * recoilScale
+        let horiz = Float.random(in: -1...1) * Float(spec.horizontalRecoil) * recoilScale
         player.root.eulerAngles.y += horiz
         pitch = min(1.35, max(-1.35, pitch))
         shake = min(shake + 0.035, 0.09)
@@ -637,7 +639,8 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         if !player.grounded { spread *= 1.5 }
         if player.crouching { spread *= 0.65 }
 
-        let origin = cameraNode.presentation.worldPosition
+        let originV = cameraNode.presentation.worldPosition
+        let origin = SIMD3<Float>(originV.x, originV.y, originV.z)
         let dir0 = cameraForward()
         let dir = cone(dir0, spread: Float(spread))
 
@@ -904,13 +907,14 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
             let targetWorld = cameraHolder.convertPosition(SCNVector3(0, 1.2, 0), to: scene.rootNode)
             let hits = scene.rootNode.hitTestWithSegment(
                 from: targetWorld, to: camWorld,
-                options: [.searchMode: SCNHitTestSearchMode.all.rawValue, .categoryBitMask: 16]
+                options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue,
+                          SCNHitTestOption.categoryBitMask: 16]
             )
             if let first = hits.first {
                 let p = first.worldCoordinates
-                let dx = p.x - targetWorld.x
-                let dy = p.y - targetWorld.y
-                let dz = p.z - targetWorld.z
+                let dx = Float(p.x - targetWorld.x)
+                let dy = Float(p.y - targetWorld.y)
+                let dz = Float(p.z - targetWorld.z)
                 let hitDist = (dx * dx + dy * dy + dz * dz).squareRoot()
                 cameraNode.position = SCNVector3(0, 1.35, max(0.6, hitDist - 0.25))
             } else {
@@ -1111,7 +1115,7 @@ final class GameEngine: NSObject, ObservableObject, SCNSceneRendererDelegate {
         }
     }
 
-    private func restartMatch() {
+    func restartMatch() {
         over = false
         hud.gameOver = false
         matchTime = Double((netCfg?.minutes ?? settings.matchMinutes)) * 60

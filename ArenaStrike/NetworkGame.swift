@@ -11,7 +11,7 @@ enum NetMsg: Codable {
     case end(NetResult)
 }
 
-struct NetMatchConfig: Codable {
+struct NetMatchConfig: Codable, Equatable {
     var arenaMeters: Float
     var minutes: Int
     var weapon: String
