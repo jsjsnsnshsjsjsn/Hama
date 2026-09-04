@@ -83,9 +83,15 @@ final class GameHUD: ObservableObject {
 
 // MARK: - Entities
 
-private struct Entity {
+private final class Entity {
     let id: String            // "player", "bot0".."bot3", "opponent"
     let root: SCNNode
+
+    init(id: String, root: SCNNode) {
+        self.id = id
+        self.root = root
+    }
+
     var hp: Double = 100
     var alive = true
     var kills = 0
