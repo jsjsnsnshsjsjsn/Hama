@@ -1,0 +1,31 @@
+name: VX
+options:
+  bundleIdPrefix: com.rawand
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGNING_REQUIRED: NO
+    CODE_SIGNING_ALLOWED: NO
+targets:
+  VX:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: VX
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rawand.vxchat
+        PRODUCT_NAME: VX
+        INFOPLIST_FILE: VX/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ENABLE_BITCODE: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
