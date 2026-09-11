@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key><string>en</string>
+  <key>CFBundleDisplayName</key><string>VX Chat</string>
+  <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+  <key>CFBundleName</key><string>$(PRODUCT_NAME)</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
+  <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
+  <key>LSRequiresIPhoneOS</key><true/>
+  <key>UILaunchScreen</key>
+  <dict>
+    <key>UIColorName</key><string></string>
+  </dict>
+  <key>UIApplicationSceneManifest</key>
+  <dict>
+    <key>UIApplicationSupportsMultipleScenes</key><false/>
+  </dict>
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+  <key>UIUserInterfaceStyle</key><string>Dark</string>
+  <key>UIViewControllerBasedStatusBarAppearance</key><true/>
+  <key>ITSAppUsesNonExemptEncryption</key><false/>
+
+  <key>NSCameraUsageDescription</key>
+  <string>بۆ ناردنی وێنە و ڤیدیۆ لە چاتەکەدا پێویستە بە کامێرا.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>بۆ ناردنی نامەی دەنگی پێویستە بە مایکرۆفۆن.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>بۆ هەڵبژاردنی وێنە لە گەلەری و ناردنی لە چاتەکەدا.</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>بۆ پاشەکەوتکردنی وێنەکان لە گەلەری.</string>
+  <key>NSSpeechRecognitionUsageDescription</key>
+  <string>بۆ گۆڕینی قسە بۆ نووسین.</string>
+
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key><true/>
+    <key>NSAllowsArbitraryLoadsInWebContent</key><true/>
+  </dict>
+
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>https</string><string>http</string>
+    <string>mailto</string><string>tel</string>
+    <string>whatsapp</string><string>tg</string>
+    <string>googlechromes</string>
+  </array>
+</dict>
+</plist>
